@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="BAClangUtils",
-    version="1.0.0",
+    version="1.0.1",
     author="BenArvin",
     author_email="niedongsen@yeah.net",
     description="Clang utils for parse Objective-C code",
