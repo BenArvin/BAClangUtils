@@ -1,0 +1,17 @@
+# OSX
+#
+.DS_Store
+
+# python
+*.pyc
+
+# vscode
+/.vscode
+
+# pipenv
+__pycache__
+*.egg-info
+build
+dist
+*.lock
+.venv

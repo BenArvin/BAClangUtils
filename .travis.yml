@@ -1,0 +1,45 @@
+language: python
+
+python:
+# - '3.4'
+# - '3.5'
+# - '3.6'
+- '3.7-dev'
+
+sudo: required
+
+notifications:
+  email:
+    recipients:
+      - niedongsen@yeah.net
+    on_success: always
+    on_failure: always
+
+# if: type != push OR (tag IS blank AND branch = master)
+# if: type != push OR (tag IS present AND branch = master)
+# if: tag IS present AND branch = master
+if: tag IS present
+
+before_install:
+- chmod +x travis/travis_install.sh
+
+install:
+- travis/travis_install.sh
+
+before_script:
+- chmod +x travis/travis_script.sh
+
+script:
+- travis/travis_script.sh
+
+# after_success:
+# - travis/travis_after_success.sh
+
+deploy:
+  skip_existing: true
+  provider: pypi
+  user: ${U_NAME}
+  password: ${U_SECURE}
+  on:
+    all_branches: true
+    tags: true
