@@ -47,34 +47,35 @@ class RawTokenUtil(object):
     
     def parse(self, sourcePath):
         if sourcePath == None or isinstance(sourcePath, str) == False or len(sourcePath) == 0:
-            return None
+            return None, None
         if os.path.exists(sourcePath) == False or os.path.isdir(sourcePath) == True:
-            return None
+            return None, None
 
         cmdResult = ShellUtil.runShell('clang -Xclang -dump-raw-tokens ' + sourcePath)
 
         if cmdResult == None:
-            return None
+            return None, None
         cmdResultOutput = cmdResult['output']
         cmdResultError = cmdResult['error']
 
         lineRegExpress = '(.|\n|\s)*?Loc=<(.)*?:[0-9]*?:[0-9]*?>\\n'
-        result = []
-
+        
+        outputResult = []
         if cmdResultOutput != None:
             outputLineFinds = re.finditer(lineRegExpress, cmdResultOutput)
             for lineItem in outputLineFinds:
                 lineContent = cmdResultOutput[lineItem.start(): lineItem.end()]
                 resultTmp = self.__resolveLine(lineContent)
                 if resultTmp != None:
-                    result.append(resultTmp)
+                    outputResult.append(resultTmp)
 
+        errorResult = []
         if cmdResultError != None:
             errorLineFinds = re.finditer(lineRegExpress, cmdResultError)
             for lineItem in errorLineFinds:
                 lineContent = cmdResultError[lineItem.start(): lineItem.end()]
                 resultTmp = self.__resolveLine(lineContent)
                 if resultTmp != None:
-                    result.append(resultTmp)
+                    errorResult.append(resultTmp)
 
-        return result
+        return outputResult, errorResult

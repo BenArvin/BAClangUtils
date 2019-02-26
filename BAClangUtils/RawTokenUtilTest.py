@@ -8,4 +8,6 @@ from BAClangUtils.RawTokenUtil import RawTokenUtil
 
 if __name__ == '__main__':
     util = RawTokenUtil()
-    print(util.parse('~/Desktop/TestProject/TestProject/ViewController.m'))
+    output, error = util.parse('~/Desktop/TestProject/TestProject/ViewController.m')
+    print('output: ' + str(output))
+    print('error: ' + str(error))
