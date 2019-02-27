@@ -14,10 +14,17 @@ class RawTokenUtil(object):
 
         if re.match("^unknown ('|\"){1,1}(.*)?$", lineContent, re.S) != None:
             return None
-        
+
         tmpLineContent = lineContent
+        uncleanContent = None
+        uncleanContentFinds = re.finditer('\[UnClean=(.|\s)*?\]', tmpLineContent)
+        for findItem in uncleanContentFinds:
+            uncleanContent = tmpLineContent[findItem.start()+10: findItem.end()-2]
+            break
+        
         tmpLineContent = tmpLineContent.replace('[StartOfLine]', '')
-        tmpLineContent = re.sub('\[UnClean(.|\s)*?\]', '', tmpLineContent)
+        if uncleanContent != None:
+            tmpLineContent = re.sub('\[UnClean=(.|\s)*?\]', '', tmpLineContent)
         
         blankIndexs = []
         blanksRegFinds = re.finditer('( |\t)', tmpLineContent)
@@ -34,12 +41,13 @@ class RawTokenUtil(object):
         locationLine = int(locationTmp[colonIndexs[0] + 1: colonIndexs[1]])
         locationColumn = int(locationTmp[colonIndexs[1] + 1: len(locationTmp) - 1]) - 1
 
-        tmpLineContent = tmpLineContent[blankIndexs[0]: blankIndexs[len(blankIndexs) - 1]]
-        tmpLineContent = re.sub('^(\t| )*?(\'|\"){1,1}', '', tmpLineContent)
-        tmpLineContent = re.sub('(\'|\"){1,1}(\t| )*?$', '', tmpLineContent)
+        if uncleanContent == None:
+            tmpLineContent = tmpLineContent[blankIndexs[0]: blankIndexs[len(blankIndexs) - 1]]
+            tmpLineContent = re.sub('^(\t| )*?(\'|\"){1,1}', '', tmpLineContent)
+            tmpLineContent = re.sub('(\'|\"){1,1}(\t| )*?$', '', tmpLineContent)
 
         result = {}
-        result['content'] = tmpLineContent
+        result['content'] = tmpLineContent if uncleanContent == None else uncleanContent
         result['class'] = lineClass
         result['line'] = locationLine
         result['column'] = locationColumn
