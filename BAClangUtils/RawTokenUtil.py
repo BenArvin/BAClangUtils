@@ -41,13 +41,13 @@ class RawTokenUtil(object):
         locationLine = int(locationTmp[colonIndexs[0] + 1: colonIndexs[1]])
         locationColumn = int(locationTmp[colonIndexs[1] + 1: len(locationTmp) - 1]) - 1
 
-        if uncleanContent == None:
-            tmpLineContent = tmpLineContent[blankIndexs[0]: blankIndexs[len(blankIndexs) - 1]]
-            tmpLineContent = re.sub('^(\t| )*?(\'|\"){1,1}', '', tmpLineContent)
-            tmpLineContent = re.sub('(\'|\"){1,1}(\t| )*?$', '', tmpLineContent)
+        tmpLineContent = tmpLineContent[blankIndexs[0]: blankIndexs[len(blankIndexs) - 1]]
+        tmpLineContent = re.sub('^(\t| )*?(\'|\"){1,1}', '', tmpLineContent)
+        tmpLineContent = re.sub('(\'|\"){1,1}(\t| )*?$', '', tmpLineContent)
 
         result = {}
-        result['content'] = tmpLineContent if uncleanContent == None else uncleanContent
+        result['content'] = tmpLineContent
+        result['unCleanContent'] = uncleanContent if uncleanContent != None else tmpLineContent
         result['class'] = lineClass
         result['line'] = locationLine
         result['column'] = locationColumn
