@@ -11,7 +11,7 @@ sudo: required
 notifications:
   email:
     recipients:
-      - niedongsen@yeah.net
+      - benarvin93@outlook.com
     on_success: always
     on_failure: always
 
